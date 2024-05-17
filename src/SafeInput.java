@@ -277,8 +277,6 @@ public class SafeInput {
 
         String userInput = "";
 
-
-
         do {
 
             System.out.println(prompt);
@@ -300,7 +298,7 @@ public class SafeInput {
         } while (true);
 
 
-        return userInput + regEx;
+        return userInput;
 
     }
 

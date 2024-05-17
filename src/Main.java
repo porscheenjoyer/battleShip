@@ -26,11 +26,15 @@ public class Main {
         Random rand = new Random();
 
         //Variables
-        String playerMove = "\u26F4";
+        String playerMove = "-";
 
         int moveCount = 0;
 
         boolean gameOver = false;
+
+        int missCounter = 0;
+
+        int strike = 0;
 
         clearBoard();
         display();
@@ -41,21 +45,112 @@ public class Main {
         placeShip(BATTLESHIP);
         placeShip(CARRIER);
 
-        display();
+        do {
+
+            display();
+
+            do {
+
+                System.out.println("What is your move?");
+                int row = SafeInput.getRangedInt(in, "Row: ", 1, 10);
+
+                String alphaCol = SafeInput.getRegExString(in, "Column: ", "[AaBbCcDdEeFfGgHhIiJj]");
+                alphaCol = alphaCol.toUpperCase();
+                int col = 0;
+
+                System.out.println(alphaCol);
+
+                switch (alphaCol) {
+
+                    case "A":
+                        col = 0;
+                        System.out.println(col);
+                        break;
+                    case "B":
+                        col = 1;
+                        System.out.println(col);
+                        break;
+                    case "C":
+                        col = 2;
+                        System.out.println(col);
+                        break;
+                    case "D":
+                        col = 3;
+                        System.out.println(col);
+                        break;
+                    case "E":
+                        col = 4;
+                        System.out.println(col);
+                        break;
+                    case "F":
+                        col = 5;
+                        System.out.println(col);
+                        break;
+                    case "G":
+                        col = 6;
+                        System.out.println(col);
+                        break;
+                    case "H":
+                        col = 7;
+                        System.out.println(col);
+                        break;
+                    case "I":
+                        col = 8;
+                        System.out.println(col);
+                        break;
+                    case "J":
+                        col = 9;
+                        System.out.println(col);
+                        break;
+                    default:
+                        System.out.println("Not working");
+                        break;
+                }
+
+                col ++;
+
+                if (board[col][row].equalsIgnoreCase("boat")) {
+
+                    board[col][row] = "hit";
+                    System.out.println("Hit");
+
+                }
+
+                else {
+
+                    board[col][row] = "miss";
+                    missCounter++;
+                    System.out.println("You missed :(");
+
+                    if (missCounter == 5) {
+
+                        strike++;
+
+                        if (strike == 3) {
+
+                            gameOver = true;
+
+                        }
+
+                    }
+
+                }
+                break;
+
+            } while (true);
+
+        } while (true);
 
     }
 
     private static void clearBoard() {
-
-
-
         //Loop
         for (int row = 0; row < ROW; row ++) {
 
             //Loop
             for (int col = 0; col < COL; col ++) {
 
-                board[row][col] = "\uD83C\uDF0A";
+                board[row][col] = "-";
 
             }
 
@@ -110,7 +205,7 @@ public class Main {
 
     private static boolean isValidMove (int row, int col) {
 
-        boolean validMove = board[row][col].equals("\uD83C\uDF0A");
+        boolean validMove = board[row][col].equals("-");
 
         return validMove;
 
@@ -135,14 +230,14 @@ public class Main {
         //If ship is vertical
         if (vertOrHori == 0) {
 
-            board[rand.nextInt(9) + 1][rand.nextInt(10) + 1] = "\u26F4";
+            board[rand.nextInt(9) + 1][rand.nextInt(10) + 1] = "boat";
 
         }
 
         //If ship is horizontal
         else if (vertOrHori == 1) {
 
-            board[rand.nextInt(10) + 1][rand.nextInt(9) + 1] = "\u26F4";
+            board[rand.nextInt(10) + 1][rand.nextInt(9) + 1] = "boat";
 
         }
 
@@ -178,7 +273,7 @@ public class Main {
 
                 for (int i = 0; i <= ship; i ++) {
 
-                    if (board[row + i][col].equals("\uD83C\uDF0A")) { //\uD83c\uDF0A is wave or -
+                    if (board[row + i][col].equals("-")) { //\uD83c\uDF0A is wave or -
 
                         //Sub needs two more spaces
                         validCounter ++;
@@ -193,7 +288,7 @@ public class Main {
 
             for (int i = 0; i <= ship; i ++) {
 
-                board[row + i][col] = "\u26F4"; //\u26F4 is ship
+                board[row + i][col] = "boat"; //\u26F4 is ship
 
             }
 
@@ -215,7 +310,7 @@ public class Main {
 
                 for (int i = 0; i <= ship; i ++) {
 
-                    if (board[row][col + i].equals("\uD83C\uDF0A")) {
+                    if (board[row][col + i].equals("-")) {
 
                         //Sub needs two more spaces
                         validCounter ++;
@@ -230,7 +325,7 @@ public class Main {
 
             for (int i = 0; i <= ship; i ++) {
 
-                board[row][col + i] = "\u26F4";
+                board[row][col + i] = "boat";
 
             }
 
