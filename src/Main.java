@@ -36,6 +36,10 @@ public class Main {
 
         int strike = 0;
 
+        int hitCounter = 0;
+
+        boolean playAgain = false;
+
         clearBoard();
         display();
 
@@ -45,101 +49,129 @@ public class Main {
         placeShip(BATTLESHIP);
         placeShip(CARRIER);
 
+
+
+        //Play Again Loop
         do {
 
-            display();
 
+
+            //Game Loop
             do {
 
-                System.out.println("What is your move?");
-                int row = SafeInput.getRangedInt(in, "Row: ", 1, 10);
+                display();
 
-                String alphaCol = SafeInput.getRegExString(in, "Column: ", "[AaBbCcDdEeFfGgHhIiJj]");
-                alphaCol = alphaCol.toUpperCase();
-                int col = 0;
+                //Move Loop
+                do {
 
-                System.out.println(alphaCol);
+                    System.out.println("What is your move?");
+                    int row = SafeInput.getRangedInt(in, "Row: ", 1, 10);
 
-                switch (alphaCol) {
+                    String alphaCol = SafeInput.getRegExString(in, "Column: ", "[AaBbCcDdEeFfGgHhIiJj]");
+                    alphaCol = alphaCol.toUpperCase();
+                    int col = 0;
 
-                    case "A":
-                        col = 0;
-                        System.out.println(col);
-                        break;
-                    case "B":
-                        col = 1;
-                        System.out.println(col);
-                        break;
-                    case "C":
-                        col = 2;
-                        System.out.println(col);
-                        break;
-                    case "D":
-                        col = 3;
-                        System.out.println(col);
-                        break;
-                    case "E":
-                        col = 4;
-                        System.out.println(col);
-                        break;
-                    case "F":
-                        col = 5;
-                        System.out.println(col);
-                        break;
-                    case "G":
-                        col = 6;
-                        System.out.println(col);
-                        break;
-                    case "H":
-                        col = 7;
-                        System.out.println(col);
-                        break;
-                    case "I":
-                        col = 8;
-                        System.out.println(col);
-                        break;
-                    case "J":
-                        col = 9;
-                        System.out.println(col);
-                        break;
-                    default:
-                        System.out.println("Not working");
-                        break;
-                }
+                    System.out.println(alphaCol);
 
-                col ++;
+                    switch (alphaCol) {
 
-                if (board[col][row].equalsIgnoreCase("boat")) {
+                        case "A":
+                            col = 0;
+                            System.out.println(col);
+                            break;
+                        case "B":
+                            col = 1;
+                            System.out.println(col);
+                            break;
+                        case "C":
+                            col = 2;
+                            System.out.println(col);
+                            break;
+                        case "D":
+                            col = 3;
+                            System.out.println(col);
+                            break;
+                        case "E":
+                            col = 4;
+                            System.out.println(col);
+                            break;
+                        case "F":
+                            col = 5;
+                            System.out.println(col);
+                            break;
+                        case "G":
+                            col = 6;
+                            System.out.println(col);
+                            break;
+                        case "H":
+                            col = 7;
+                            System.out.println(col);
+                            break;
+                        case "I":
+                            col = 8;
+                            System.out.println(col);
+                            break;
+                        case "J":
+                            col = 9;
+                            System.out.println(col);
+                            break;
+                        default:
+                            System.out.println("Not working");
+                            break;
+                    }
 
-                    board[col][row] = "hit";
-                    System.out.println("Hit");
+                    col++;
 
-                }
+                    if (board[col][row].equalsIgnoreCase("boat")) {
 
-                else {
-
-                    board[col][row] = "miss";
-                    missCounter++;
-                    System.out.println("You missed :(");
-
-                    if (missCounter == 5) {
-
-                        strike++;
-
-                        if (strike == 3) {
-
-                            gameOver = true;
-
-                        }
+                        board[col][row] = "hit";
+                        System.out.println("Hit");
+                        hitCounter++;
+                        missCounter = 0;
 
                     }
 
+                    else if (board[col][row].equalsIgnoreCase("-")) {
+
+                        board[col][row] = "miss";
+                        missCounter++;
+                        System.out.println("You missed :(");
+
+                        if (missCounter == 5) {
+
+                            strike++;
+                            missCounter = 0;
+                            System.out.println("You got a strike!\nStrikes: " + strike);
+
+                            if (strike == 3) {
+
+                                System.out.println("You got 3 strikes!\nGame Over!");
+                                gameOver = true;
+                                break;
+
+                            }
+
+                        }
+                    }
+
+
+                    System.out.println("Misses: " + missCounter + "\nStrikes: " + strike + "\nHits: " + hitCounter);
+                    break;
+
+                } while (true);
+
+                if (hitCounter == 17) {
+
+                    System.out.println("You sank all of the boats!\nYou Won!");
+                    gameOver = true;
+
                 }
-                break;
 
-            } while (true);
+            } while (!gameOver);
 
-        } while (true);
+            playAgain = SafeInput.getYNConfirm(in, "So you want to play again?");
+
+        } while (!playAgain);
 
     }
 
@@ -203,43 +235,45 @@ public class Main {
 
     }
 
+
+
+    private static void gameDisplay() {
+
+        //Loop
+        for (int row = 0; row < ROW; row ++) {
+
+            System.out.print("| ");
+
+            //Loop
+            for (int col = 0; col < COL; col ++) {
+
+                System.out.print(board[row][col] + " | ");
+
+            }
+            System.out.println();
+
+        }
+
+    }
+
     private static boolean isValidMove (int row, int col) {
 
-        boolean validMove = board[row][col].equals("-");
+        boolean validMove;
+
+        if (board[row][col].equals("-")) {
+
+            validMove = true;
+
+        }
+
+        else {
+
+            System.out.println("Already something there");
+            validMove = false;
+
+        }
 
         return validMove;
-
-    }
-
-    public static void PlaceShips() {
-
-
-
-    }
-
-    public static void PatrolShip() {
-
-        //Variables
-        Random rand = new Random();
-
-
-        //Variables
-        int vertOrHori = rand.nextInt(2);
-
-
-        //If ship is vertical
-        if (vertOrHori == 0) {
-
-            board[rand.nextInt(9) + 1][rand.nextInt(10) + 1] = "boat";
-
-        }
-
-        //If ship is horizontal
-        else if (vertOrHori == 1) {
-
-            board[rand.nextInt(10) + 1][rand.nextInt(9) + 1] = "boat";
-
-        }
 
     }
 
